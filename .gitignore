@@ -1,2 +1,19 @@
-data/*.csv
-data/*.html
+# Ignore build and binary folders
+.build/
+.bin/
+
+# Ignore large simulation data and output
+data/simulation_output.csv
+data/orbits.html
+data/animation.html
+solar_system_viewer.html
+
+# Ignore images and media
+*.jpg
+*.gif
+*.mp4
+
+# Ignore hidden system files and editor temporary files
+.DS_Store
+*.swp
+*~
