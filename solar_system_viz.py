@@ -470,7 +470,7 @@ scene.add(sunLight);
   scene.add(skyMesh);
 
   new THREE.TextureLoader().load(
-    'stars_milky_way_8k.jpg',
+    'starmap_16k.jpg',
     (tex) => {
       tex.colorSpace = THREE.SRGBColorSpace;
       tex.wrapS = THREE.RepeatWrapping;
