@@ -1,6 +1,14 @@
 import requests
 import json
 import re
+# We need to hook into the socket module to force IPv4 globally for requests
+import urllib3.util.connection as urllib3_cn
+
+def allowed_gai_family():
+    import socket
+    return socket.AF_INET
+
+urllib3_cn.allowed_gai_family = allowed_gai_family
 
 HORIZONS_URL = "https://ssd.jpl.nasa.gov/api/horizons.api"
 
@@ -13,16 +21,16 @@ EPOCH_STOP  = "2000-01-02"
 # Mass and radius are physical constants - Horizons doesn't return them easily
 BODIES = [
     {"name": "Sun",     "id": "10",     "mass": 1.98841e30, "radius": 695700, "rotation_speed": 1.99362,    "orbital_tilt": 7.25},
-    {"name": "Mercury", "id": "199",    "mass": 3.302e23,   "radius": 2439,   "rotation_speed": 0.00302484, "orbital_tilt": 0.035167},
-    {"name": "Venus",   "id": "299",    "mass": 4.8685e24,  "radius": 6052,   "rotation_speed": 0.00181095, "orbital_tilt": 177.3},
+    {"name": "Mercury", "id": "1",    "mass": 3.302e23,   "radius": 2439,   "rotation_speed": 0.00302484, "orbital_tilt": 0.035167},
+    {"name": "Venus",   "id": "2",    "mass": 4.8685e24,  "radius": 6052,   "rotation_speed": 0.00181095, "orbital_tilt": 177.3},
     {"name": "Earth",   "id": "399",    "mass": 5.97219e24, "radius": 6371,   "rotation_speed": 0.464587,   "orbital_tilt": 23.4392911},
     {"name": "Moon", "id": "301", "mass": 7.342e22, "radius": 1737, "rotation_speed": 0.004627, "orbital_tilt": 5.145},
-    {"name": "Mars",    "id": "499",    "mass": 6.4171e23,  "radius": 3390,   "rotation_speed": 0.240282,   "orbital_tilt": 25.19},
-    {"name": "Jupiter", "id": "599",    "mass": 1.89819e27, "radius": 69911,  "rotation_speed": 12.29375,   "orbital_tilt": 3.13},
-    {"name": "Saturn",  "id": "699",    "mass": 5.6834e26,  "radius": 58232,  "rotation_speed": 9.53734,    "orbital_tilt": 26.73},
-    {"name": "Uranus",  "id": "799",    "mass": 8.6813e25,  "radius": 25362,  "rotation_speed": 2.56757,    "orbital_tilt": 97.77},
-    {"name": "Neptune", "id": "899",    "mass": 1.02409e26, "radius": 24624,  "rotation_speed": 2.66770,    "orbital_tilt": 28.32},
-    {"name": "Pluto",   "id": "999",    "mass": 1.303e22,   "radius": 1188,   "rotation_speed": 0.0,        "orbital_tilt": 122.53},
+    {"name": "Mars",    "id": "4",    "mass": 6.4171e23,  "radius": 3390,   "rotation_speed": 0.240282,   "orbital_tilt": 25.19},
+    {"name": "Jupiter", "id": "5",    "mass": 1.89819e27, "radius": 69911,  "rotation_speed": 12.29375,   "orbital_tilt": 3.13},
+    {"name": "Saturn",  "id": "6",    "mass": 5.6834e26,  "radius": 58232,  "rotation_speed": 9.53734,    "orbital_tilt": 26.73},
+    {"name": "Uranus",  "id": "7",    "mass": 8.6813e25,  "radius": 25362,  "rotation_speed": 2.56757,    "orbital_tilt": 97.77},
+    {"name": "Neptune", "id": "8",    "mass": 1.02409e26, "radius": 24624,  "rotation_speed": 2.66770,    "orbital_tilt": 28.32},
+    {"name": "Pluto",   "id": "9",    "mass": 1.303e22,   "radius": 1188,   "rotation_speed": 0.0,        "orbital_tilt": 122.53},
     {"name": "Halley",  "id": "90000001", "mass": 2.2e14,     "radius": 5,      "rotation_speed": 0.0,        "orbital_tilt": 162.3},
     # --- Dwarf Planets ---
     {"name": "Ceres",    "id": "2000001", "mass": 9.39e20,  "radius": 473,  "rotation_speed": 0.0, "orbital_tilt": 4.0},
@@ -32,7 +40,7 @@ BODIES = [
     {"name": "Sedna",    "id": "90377",   "mass": 0.0,      "radius": 497,  "rotation_speed": 0.0, "orbital_tilt": 11.9},
 
     # --- Comets ---
-    {"name": "Hale-Bopp", "id": "90000798", "mass": 1.3e16, "radius": 30, "rotation_speed": 0.0, "orbital_tilt": 89.4},
+    {"name": "Hale-Bopp", "id": "90002250", "mass": 1.3e16, "radius": 30, "rotation_speed": 0.0, "orbital_tilt": 89.4},
     {"name": "Encke",     "id": "90000002", "mass": 1.0e13, "radius": 2.4, "rotation_speed": 0.0, "orbital_tilt": 11.8},
 ]
 
